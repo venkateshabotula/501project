@@ -1,0 +1,14 @@
+npm init 
+npm install pg sequalize
+node connectDb.js
+npm install --save-dev sequelize-cli (opt)
+npx sequelize-cli init
+npx sequelize-cli db:create
+npx sequelize-cli model:generate --name sports --attributes sport:string,admin:string  
+npx sequelize-cli db:migrate
+npx sequelize-cli model:generate --name matches --attributes sport:string,match:string,date:dateonly,venue:string,admin:string
+npx sequelize-cli model:generate --name session --attributes sport:string,match:string,admin:string
+
+
+npx sequelize-cli model:generate --name matches --attributes sport:string,admin:string,match:string,date:dateonly,teamsize:integer,venue:string,timein:string,timeout:string,reason:string
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/displayindividual.css">
+</head>
+<body>
+    <div id="displayind">
+        <!-- displaying you joined match -->
+        <h1>You Joined Match</h1>
+        <% matches.forEach(function(match) { %>
+        <% if(match.reason==null ){%> 
+          <ul>
+            <% sessionData.forEach(function(session) { %>
+              <% if (session.sport === match.sport && session.match === match.match && session.admin==adminName) { %>
+                <li>
+                  Sport: <%= match.sport %>,
+                Match: <%= match.match %>,
+                Date: <%= match.date %>,
+                Venue: <%= match.venue %></li>
+              <% } %>
+            <% }); %>
+          </ul>
+          <% } else {%>
+            <ul>
+              <% sessionData.forEach(function(session) { %>
+                <% if (session.sport === match.sport && session.match === match.match && session.admin==adminName) { %>
+                  <li>
+                    Sport: <%= match.sport %>,
+                  Match: <%= match.match %>,
+                  Date: <%= match.date %>,
+                  Venue: <%= match.venue %></li>
+                  reason : <%= match.reason%>  &nbsp;<b>match is Deleted</b>
+                <% } %>
+              <% }); %>
+            </ul>
+          <%}%>
+        <% }); %>
+        </ul>
+        </div>
+</body>
+</html>

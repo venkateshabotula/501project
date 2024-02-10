@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports Scheduler</title>
+  <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body>
+  <h1>Welcome <%=adminName %> &nbsp;<%=adminEmail %></h1>
+ <!-- create sport form -->
+  <%- include('createsport.ejs')%>
+  <br><br><br>
+  <!-- create match -->
+  <%- include('creatematch.ejs')%>
+<br>
+  <!-- create joinmatch -->
+  <%- include('joinmatch.ejs')%>
+  <br><br>
+  <!-- display all players -->
+  <%- include('displayall.ejs')%>
+  <!-- displayindividual -->
+  <%-include('displayindividual.ejs')%>
+  <!-- delete matches -->
+  <%- include('deletematchforms.ejs')%>
+  <!-- deleteditems -->
+  <%- include('deleteditems.ejs')%>
+  <!-- matches for particular date -->
+  <%- include('datewisematches.ejs')%>
+</body>
+
+</html>

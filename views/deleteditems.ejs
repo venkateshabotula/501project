@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/displayall.css">
+</head>
+<body>
+    <div id="displayall">
+    <h1>Deleted Items</h1>
+<% matches.forEach(function(match) { %>
+  <% if(match.reason!=null){%>
+  <li>
+    Sport: <%= match.sport %>,
+    Match: <%= match.match %>,
+    Date: <%= match.date %>,
+    Venue: <%= match.venue %>
+    Reason :<%= match.reason%>
+  </li>
+  <% }%>
+<% }); %>
+</ul>
+</div>
+</body>
+</html>

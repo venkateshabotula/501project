@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/datewiematches.css">
+</head>
+<body>
+<h1>Matches from the Current Date Onwards</h1>
+
+    <% const currentDate = new Date().toISOString().split('T')[0]; %>
+
+    <% const futureDates = Array.from(new Set(matches.filter(match => match.date >= currentDate && match.reason==null).map(match => match.date))); %>
+
+    <% if (futureDates.length > 0) { %>
+        <% futureDates.sort().forEach(date => { %>
+            <h2>Matches on <%= date %></h2>
+
+            <% const matchesForDate = matches.filter(match => match.date === date); %>
+
+            <p>Total Matches: <%= matchesForDate.length %></p>
+
+            <ul>
+                <% const uniqueSports = Array.from(new Set(matchesForDate.map(match => match.sport))); %>
+
+                <% uniqueSports.forEach(sport => { %>
+                    <li>
+                        <strong><%= sport %></strong> - <%= matchesForDate.filter(match => match.sport === sport).length %>&nbsp;matches<br>
+                       <% matchesForDate.forEach(match => { %>
+                            <%if(match.reason==null){%>
+                             <%= match.match%><br>
+                            <%}%>
+                        <% }); %>
+                    </li>
+                <% }); %>
+            </ul>
+
+        <% }); %>
+    <% } else { %>
+        <p>No upcoming matches found.</p>
+    <% } %>
+</body>
+</html>

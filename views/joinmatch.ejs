@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/joinmatch.css">
+</head>
+<body>
+  <div id="joinmatch">
+    <h1>Join Match Form</h1>
+
+<!-- Assuming you have a list of matches available in the 'matches' variable -->
+<form action="/joinmatch" method="post" onsubmit="return validateDat()">
+  <% const sportsWithMatches = new Map(); %>
+
+  <!-- Group matches by sport -->
+  <% matches.forEach(function(match) { %>
+    <% if (!sportsWithMatches.has(match.sport)) { %>
+      <% sportsWithMatches.set(match.sport, []); %>
+    <% } %>
+    <% sportsWithMatches.get(match.sport).push(match); %>
+  <% }); %>
+
+  <!-- Iterate over sports and their matches -->
+  <% sportsWithMatches.forEach(function(matchesForSport, sport) { %>
+    <% if (matchesForSport.some(match => match.reason === null)) { %>
+      <p></p>
+      <label><strong><%= sport %></strong></label><br>
+      <% matchesForSport.forEach(function(match) { %>
+        <% if (match.reason === null) { %>
+          Date <%= match.date %> Start <%= match.timein %> End <%= match.timeout %> Venue <%= match.venue %> 
+          Player Required <%= match.teamsize %> 
+
+          <% const joinedPlayers = sessionData.filter(session => session.sport === sport && session.match === match.match).length; %>
+          <% const availableSlots = match.teamsize - joinedPlayers; %>
+          
+          <!-- Generate input field dynamically with unique ID based on the date -->
+          <!-- <input type="text" id="inputField:<%= match.date %>" name="inputField:<%= match.date %>" value="inputField:<%= match.date %>"> -->
+
+          <% if (availableSlots > 0) { %>
+            <!-- Display registration information -->
+            Match Name:<input type="radio" id="<%= match.match %>" name="selectedInfo" value="<%= match.match + '#'+sport+'#' + match.date+'#'+match.timein+'#'+match.timeout%>" required>
+            <label for="<%= match.match %>"><%= match.match %></label>
+            Available Slots: <%= availableSlots %>
+          <% } else { %>
+            <!-- Display a message when the match is full -->
+            Match Name: <%= match.match %> (Match Full)
+          <% } %>
+
+        <% } %>
+      <% }); %>
+      </p>
+    <% } %>
+  <% }); %>
+  
+  <!-- <label for="admin">Admin:</label> -->
+  <input type="hidden" id="admin" name="admin" value="<%= adminName %>" required>
+  <br>
+  <button type="submit">Submit</button>
+</form>
+<% let count = 0; %>
+<% sessionData.forEach(function(session) { %>
+  <% if (session.admin === adminName && session.reason == null) { %>
+      <% const matchingMatch = matches.find(match => match.sport === session.sport && match.match === session.match); %>
+      
+      <!-- Check if a matching match is found -->
+      <% if (matchingMatch) { %>
+          <!-- Store sport, match, date, and time information in a single hidden input field -->
+          <input type="hidden" id="<%= count %>" name="<%= count %>" value="<%= session.sport + '#' + session.match + '#' + matchingMatch.date + '#' + matchingMatch.timein+'#'+matchingMatch.timeout%>">
+          <% count++; %>
+      <% } %>
+  <% } %>
+<% }); %>
+
+<script>
+var selectedValue = null;
+
+  function validateDat(){
+    // Get the selected date from the radio button
+    const selectedDateInput = selectedValue;
+    if (!selectedDateInput) {
+        alert('Please select a match.' + selectedDate + 'ee');
+        return false; // Prevent form submission
+    }
+
+    const selectedDate = selectedDateInput.split('#')[2];
+    const currentDate = new Date();
+    const selectedMatchDate = new Date(selectedDate);
+    if (currentDate > selectedMatchDate) {
+        alert('Cannot join past matches. Please select a match from '+currentDate+' onwords'  );
+        return false; // Prevent form submission
+    }
+
+    const selectedSport = selectedDateInput.split('#')[1];
+    const selectedMatch = selectedDateInput.split('#')[0];
+    const selectedTimein = selectedDateInput.split('#')[3];
+    const selectedTimeout = selectedDateInput.split('#')[4];
+    for (let x = 0; x < <%=count%>; x++) {
+        let a = document.getElementById(x).value;
+        let [sport, match, date, timein, timeout] = a.split('#');
+        if (match == selectedMatch && sport == selectedSport) {
+            alert("You have already joined this match."+match+sport+selectedMatch+selectedSport);
+            return false;
+        }
+        const dtstart1 = new Date(`${date}T${timein}`);
+        const dtend1 = new Date(`${date}T${timeout}`);
+        const dtstart2 = new Date(`${selectedDate}T${selectedTimein}`);
+        const dtend2 = new Date(`${selectedDate}T${selectedTimeout}`);
+        if (!(dtend1 < dtstart2 || dtend2 < dtstart2)) {
+          alert('You have a ' + sport + ' match (' + match + ') scheduled during that time.');
+            return false;
+        }
+    }
+    return true;
+  }
+
+document.addEventListener('DOMContentLoaded', function () {
+            // Closure to maintain state
+            (function () {
+                // Function to handle radio button click
+                function handleRadioButtonClick() {
+                    selectedValue = this.value;
+                }
+
+                // Get all radio buttons
+                var radioButtons = document.querySelectorAll('input[type=radio]');
+
+                // Add event listener to each radio button
+                radioButtons.forEach(function (radioButton) {
+                    radioButton.addEventListener('click', handleRadioButtonClick);
+                });
+
+                // Now selectedValue is accessible in this scope
+                // You can use it in other functions if needed
+                function anotherFunction() {
+                    console.log('Accessing selectedValue in another function:', selectedValue);
+                }
+
+                // Example of using selectedValue in another function
+                anotherFunction();
+            })();
+        });
+ </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/creatematch.css">
+</head>
+<body >
+    <div id="creatematch">
+    <h1>Create Match Form</h1>
+    <!-- Add a delete option to the form -->
+    <form action="/creatematch" method="post" onsubmit="return validate()" >
+      <!-- Your existing form fields -->
+      <label for="sport">Sport:</label>
+      <select id="sport" name="sport" required>
+        <!-- Use EJS or any server-side templating language to dynamically generate options -->
+        <% sports.forEach(function(sport) { %>
+          <option value="<%= sport.sport %>"><%= sport.sport %></option>
+        <% }) %>
+      </select>
+      <br>
+      <!-- <label for="admin">Admin:</label> -->
+      <input type="hidden" id="admin" name="admin" value="<%= adminName%>" required>
+      <br>
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" required>
+      <label for="timein">Start</label>
+      <input type="time" id="timein" name="timein" required>
+      <label for="timeout">End</label>
+      <input type="time" id="timeout" name="timeout" required><br>
+      <label for="venue">Venue:</label>
+      <input type="text" id="venue" name="venue" required>
+      <br>
+      <label for="match">Match-Name:</label>
+      <input type="text" id="match" name="match" required>
+      <br>
+      <label for="teamsize">No of Players Required:</label>
+      <input type="number" id="number" name="teamsize" required>
+      <br>
+      
+      <button type="submit">Submit</button>
+    </form>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').setAttribute('min', today);
+  });
+
+  function validate() {
+  // Get the values of timein and timeout
+  const timein = document.getElementById('timein').value;
+  const timeout = document.getElementById('timeout').value;
+  // // Convert time strings to Date objects for comparison
+  const timeinDate = new Date(`1970-01-01T${timein}`);
+  const timeoutDate = new Date(`1970-01-01T${timeout}`);
+
+  // Check if timein is less than timeout
+  if (timeinDate >= timeoutDate) {
+    alert('End time must be greater than Start time.');
+    return false; // Prevent form submission
+  }
+
+  return true; // Allow form submission
+}
+</script>
+</body>
+</html>

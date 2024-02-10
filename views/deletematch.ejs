@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/deletematch.css">
+</head>
+<body>
+    <h1>Delete Match</h1>
+    <form action="/deletematch" method="post">
+      <% const sportsWithMatches = new Map(); %>
+      <!-- Group matches by sport -->
+      <% matches.forEach(function(match) { %>
+        <% if (match.admin === adminName) { %>
+          <% if (!sportsWithMatches.has(match.sport)) { %>
+            <% sportsWithMatches.set(match.sport, []); %>
+          <% } %>
+          <% sportsWithMatches.get(match.sport).push(match); %>
+        <% } %>
+      <% }); %>
+    
+      <!-- Iterate over sports and their matches -->
+      <% sportsWithMatches.forEach(function(matchesForSport, sport) { %>
+        <% if (matchesForSport.some(match => match.reason === null)) { %>
+          <p>
+            <label><strong><%= sport %></strong></label><br>
+            <% matchesForSport.forEach(function(match) { %>
+              <% if (match.reason === null) { %>
+                Date <%= match.date %> 
+                Start <%= match.timein %> 
+                End <%= match.timeout %>  
+                Venue <%= match.venue %> 
+                Player Required <%= match.teamsize %>
+                Match Name: <%= match.match %>
+                <input type="hidden" id="<%= 'delete_' + match.match + match.sport %>" name="deleteMatch" value="<%= match.sport +':'+match.match %>">
+                <input type="text" name="reason" >
+                <button type="submit">Delete</button><br>
+              <% } %>
+            <% }); %>
+          </p>
+        <% } %>
+      <% }); %>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const today = new Date().toISOString().split('T')[0];
+          document.getElementById('date').setAttribute('min', today);
+        });
+        
+        function validateDate() {
+        // Get the selected date from the radio button
+        const selectedDateInput = document.querySelector('input[name^="datee"]:checked');
+        const [, , dateValue] = selectedDate.split(':');
+        console.log("Extracted Date:", dateValue);
+        // Compare the selected date with today's date
+        const currentDate = new Date();
+        const selectedMatchDate = new Date(selectedDate);
+      
+        if (selectedMatchDate < '2023-03-01') {
+          alert('Cannot join past matches. Please select a future match.');
+          return false; // Prevent form submission
+        }
+      
+        return true; // Allow form submission
+      }
+      </script>
+</body>
+</html>
